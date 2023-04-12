@@ -5,10 +5,17 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GI"
         mc:Ignorable="d"
-        Title="GI" 
-        Height="450" 
-        Width="800" 
-        WindowStyle="None" ShowInTaskbar="False" ResizeMode="CanResizeWithGrip" AllowsTransparency="True">
+        WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Width="1280" Height="720" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowindow.png">
+
+    <Window.Triggers>
+        <EventTrigger RoutedEvent="Window.Loaded">
+            <BeginStoryboard>
+                <Storyboard>
+                    <DoubleAnimation From="0" To="1" Duration="0:0:0.3" Storyboard.TargetProperty="Opacity"/>
+                </Storyboard>
+            </BeginStoryboard>
+        </EventTrigger>
+    </Window.Triggers>
 
     <Window.Resources>
         <!-- Ресурсы для изображений -->
@@ -23,6 +30,7 @@
             <Setter Property="Margin" Value="5"/>
             <Setter Property="Width" Value="30"/>
             <Setter Property="Height" Value="30"/>
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -53,33 +61,62 @@
             <Setter Property="VerticalAlignment" Value="Center"/>
             <Setter Property="Foreground" Value="#CCCCCC"/>
         </Style>
+
+        <Storyboard x:Key="ClosingAnimation">
+            <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.3"/>
+        </Storyboard>
     </Window.Resources>
 
 
-    <Grid Margin="0" Width="800" Height="450">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="40"/>
-            <RowDefinition/>
-        </Grid.RowDefinitions>
+    <Grid Margin="0" Width="1280" Height="720"  MouseDown="OnMouseLeftButtonDown">
+        <Border Width="auto" Height="auto" BorderThickness="3"
+                CornerRadius="5,40,5,40" Background="#FF2B2B2B">
+            <Border.BorderBrush>
+                <LinearGradientBrush EndPoint="0.5,0.5" StartPoint="0.4,0">
+                    <GradientStop Color="Red" Offset="0"/>
+                    <GradientStop Color="Black" Offset="1"/>
+                </LinearGradientBrush>
+            </Border.BorderBrush>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="40"/>
+                    <RowDefinition/>
+                </Grid.RowDefinitions>
 
-        <Grid Background="#2B2B2B" Margin="0" VerticalAlignment="Top">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="*"/>
-                <ColumnDefinition Width="Auto"/>
-            </Grid.ColumnDefinitions>
+                <Border>
+                    <Grid Grid.Row="0" VerticalAlignment="Center" Height="40">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0" Margin="0,0,10,0">
+                            <Image Source="/imgs/icowindow.png" />
+                            <TextBlock Style="{StaticResource WindowTitle}" Margin="0,0,0,0">
+                                <Run Text="Genshin Impact " Foreground="#FFB44CFF" FontWeight="Bold" FontSize="20"/>
+                                <Run Text="|" Foreground="#FF255AFF" FontWeight="Bold" FontSize="18"/>
+                                <Run Text=" Encyclopedia of Characters"/>
+                            </TextBlock>
+                        </StackPanel>
 
-            <TextBlock Text="GI" Style="{StaticResource WindowTitle}"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Margin="0,0,10,0">
+                            <Button x:Name="MinimizeButton" Style="{StaticResource WindowButton}" Tag="{StaticResource MinimizeIcon}" Click="MinimizeButton_Click" Margin="5,5,0,5"/>
+                            <Button x:Name="CloseButton" Style="{StaticResource WindowButton}" Tag="{StaticResource CloseIcon}" Click="CloseButton_Click" />
+                        </StackPanel>
+                    </Grid>
+                </Border>
 
-            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Margin="0">
-                <Button x:Name="MinimizeButton" Style="{StaticResource WindowButton}" Tag="{StaticResource MinimizeIcon}" Click="MinimizeButton_Click" />
-                <Button x:Name="MaximizeButton" Style="{StaticResource WindowButton}" Tag="{StaticResource MaximizeIcon}" Click="MaximizeButton_Click" />
-                <Button x:Name="CloseButton" Style="{StaticResource WindowButton}" Tag="{StaticResource CloseIcon}" Click="CloseButton_Click" />
-            </StackPanel>
-        </Grid>
-
-        <Grid Grid.Row="1">
-            <!-- Тут можно добавить свой контент -->
-        </Grid>
+                <Grid Grid.Row="1" Background="White" Margin="0,0,0,40">
+                    <!-- Тут можно добавить свой контент -->
+                </Grid>
+                <Border Grid.Row="1" VerticalAlignment="Bottom" Height="40">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <TextBlock Text="Copyright © 2023 Company Name" Foreground="White"/>
+                        <TextBlock Text=" | " Foreground="White"/>
+                        <TextBlock Text="Version 1.0.0.0" Foreground="White"/>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 
 </Window>

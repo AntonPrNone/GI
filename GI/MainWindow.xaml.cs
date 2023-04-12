@@ -9,6 +9,7 @@ using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
@@ -30,33 +31,19 @@ namespace GI
             this.WindowState = WindowState.Minimized;
         }
 
-        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
-        {
-            if (this.WindowState == WindowState.Normal)
-            {
-                this.WindowState = WindowState.Maximized;
-                this.MaximizeButton.Content = new Image
-                {
-                    Source = new BitmapImage(new Uri("/imgs/expand.png", UriKind.Relative)),
-                    Width = 16,
-                    Height = 16
-                };
-            }
-            else
-            {
-                this.WindowState = WindowState.Normal;
-                this.MaximizeButton.Content = new Image
-                {
-                    Source = new BitmapImage(new Uri("/imgs/expand2.png", UriKind.Relative)),
-                    Width = 16,
-                    Height = 16
-                };
-            }
-        }
-
         private void CloseButton_Click(object sender, RoutedEventArgs e)
         {
-            Close();
+            var closingAnimation = (Storyboard)FindResource("ClosingAnimation");
+            closingAnimation.Completed += (s, _) => Close();
+            BeginStoryboard(closingAnimation);
+        }
+
+        private void OnMouseLeftButtonDown(object sender, MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == MouseButtonState.Pressed)
+            {
+                DragMove();
+            }
         }
     }
 }
