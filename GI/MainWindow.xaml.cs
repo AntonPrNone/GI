@@ -24,5 +24,39 @@ namespace GI
         {
             InitializeComponent();
         }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void MaximizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (this.WindowState == WindowState.Normal)
+            {
+                this.WindowState = WindowState.Maximized;
+                this.MaximizeButton.Content = new Image
+                {
+                    Source = new BitmapImage(new Uri("/imgs/expand.png", UriKind.Relative)),
+                    Width = 16,
+                    Height = 16
+                };
+            }
+            else
+            {
+                this.WindowState = WindowState.Normal;
+                this.MaximizeButton.Content = new Image
+                {
+                    Source = new BitmapImage(new Uri("/imgs/expand2.png", UriKind.Relative)),
+                    Width = 16,
+                    Height = 16
+                };
+            }
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            Close();
+        }
     }
 }

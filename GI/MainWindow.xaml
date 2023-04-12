@@ -5,8 +5,81 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GI"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        
+        Title="GI" 
+        Height="450" 
+        Width="800" 
+        WindowStyle="None" ShowInTaskbar="False" ResizeMode="CanResizeWithGrip" AllowsTransparency="True">
+
+    <Window.Resources>
+        <!-- Ресурсы для изображений -->
+        <BitmapImage x:Key="MinimizeIcon" UriSource="imgs/minimize.png" />
+        <BitmapImage x:Key="MaximizeIcon" UriSource="imgs/expand.png" />
+        <BitmapImage x:Key="CloseIcon" UriSource="imgs/close.png" />
+
+        <!-- Стили для кнопок -->
+        <Style TargetType="Button" x:Key="WindowButton">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderBrush" Value="Transparent"/>
+            <Setter Property="Margin" Value="5"/>
+            <Setter Property="Width" Value="30"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Grid>
+                            <Rectangle x:Name="ButtonBackground" Fill="{TemplateBinding Background}" RadiusX="5" RadiusY="5"/>
+                            <Image x:Name="ButtonIcon" Source="{TemplateBinding Tag}" Margin="5" />
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="ButtonBackground" Property="Fill" Value="#444444"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="ButtonBackground" Property="Fill" Value="#222222"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Foreground" Value="#555555"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <Style TargetType="TextBlock" x:Key="WindowTitle">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Margin" Value="10,0,0,0"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Foreground" Value="#CCCCCC"/>
+        </Style>
+    </Window.Resources>
+
+
+    <Grid Margin="0" Width="800" Height="450">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="40"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+
+        <Grid Background="#2B2B2B" Margin="0" VerticalAlignment="Top">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+
+            <TextBlock Text="GI" Style="{StaticResource WindowTitle}"/>
+
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Margin="0">
+                <Button x:Name="MinimizeButton" Style="{StaticResource WindowButton}" Tag="{StaticResource MinimizeIcon}" Click="MinimizeButton_Click" />
+                <Button x:Name="MaximizeButton" Style="{StaticResource WindowButton}" Tag="{StaticResource MaximizeIcon}" Click="MaximizeButton_Click" />
+                <Button x:Name="CloseButton" Style="{StaticResource WindowButton}" Tag="{StaticResource CloseIcon}" Click="CloseButton_Click" />
+            </StackPanel>
+        </Grid>
+
+        <Grid Grid.Row="1">
+            <!-- Тут можно добавить свой контент -->
+        </Grid>
     </Grid>
+
 </Window>
