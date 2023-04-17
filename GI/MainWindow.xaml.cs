@@ -24,6 +24,11 @@ namespace GI
         public MainWindow()
         {
             InitializeComponent();
+
+            var db = new ImageUploader(collectionName : "ImgsGI");
+            //db.UploadImage()
+            db.LoadImageFromDb();
+    
         }
 
         private void MinimizeButton_Click(object sender, RoutedEventArgs e)
