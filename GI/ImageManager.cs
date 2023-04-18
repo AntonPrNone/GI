@@ -1,14 +1,12 @@
 ﻿using MongoDB.Bson;
 using MongoDB.Driver;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GI
 {
+    // Коллекция изображений
     public class ImageUploader
     {
         private readonly string _connectionString;
@@ -16,22 +14,31 @@ namespace GI
         private readonly string _collectionName;
         private readonly string _directoryPath;
 
-        public ImageUploader(string databaseName = "DB", string collectionName = "CharactersGI", string directoryPath = "-", string connectionString = "mongodb://localhost:27017")
+        private readonly MongoClient _client;
+        private readonly IMongoDatabase _database;
+        private readonly IMongoCollection<BsonDocument> _collection;
+
+        public ImageUploader(string databaseName = "DB", string collectionName = "CharactersGI", string directoryPath = "null", string connectionString = "mongodb://localhost:27017")
         {
-            if (directoryPath == "-") directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), @"imgs\pers");
-            Directory.CreateDirectory(directoryPath);
             _connectionString = connectionString;
             _databaseName = databaseName;
             _collectionName = collectionName;
+
+            if (string.IsNullOrEmpty(directoryPath))
+            {
+                directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "imgs", "pers");
+            }
+
+            Directory.CreateDirectory(directoryPath);
             _directoryPath = directoryPath;
+
+            _client = new MongoClient(_connectionString);
+            _database = _client.GetDatabase(_databaseName);
+            _collection = _database.GetCollection<BsonDocument>(_collectionName);
         }
 
         public async Task UploadImageAsync(string filename) // Загрузка в БД конкретное изображение
         {
-            var client = new MongoClient(_connectionString);
-            var database = client.GetDatabase(_databaseName);
-            var collection = database.GetCollection<BsonDocument>(_collectionName);
-
             filename = Path.ChangeExtension(filename, ".png");
             var file = new FileInfo(Path.Combine(_directoryPath, filename));
 
@@ -48,7 +55,7 @@ namespace GI
                     {"uploadDate", DateTime.UtcNow.AddHours(3)}
                 };
 
-                await collection.InsertOneAsync(document);
+                await _collection.InsertOneAsync(document);
             }
 
             else
@@ -59,10 +66,6 @@ namespace GI
 
         public async Task UploadImageAsync() // Загрузка в БД все изображения из папки
         {
-            var client = new MongoClient(_connectionString);
-            var database = client.GetDatabase(_databaseName);
-            var collection = database.GetCollection<BsonDocument>(_collectionName);
-
             var directory = new DirectoryInfo(_directoryPath);
 
             foreach (var file in directory.GetFiles())
@@ -78,20 +81,16 @@ namespace GI
                     {"uploadDate", DateTime.UtcNow.AddHours(3)}
                 };
 
-                await collection.InsertOneAsync(document);
+                await _collection.InsertOneAsync(document);
             }
         }
 
-        public async Task LoadImageFromDbAsync(string filename) // Загрузка из БД конкретный файл
+        public async Task LoadImageFromDbAsync(string filename) // Загрузка из БД конкретный документ
         {
-            var client = new MongoClient(_connectionString);
-            var database = client.GetDatabase(_databaseName);
-            var collection = database.GetCollection<BsonDocument>(_collectionName);
-
             filename = Path.ChangeExtension(filename, ".png");
 
             var filter = Builders<BsonDocument>.Filter.Eq("filename", filename);
-            var document = await collection.Find(filter).FirstOrDefaultAsync();
+            var document = await _collection.Find(filter).FirstOrDefaultAsync();
 
             if (document != null)
             {
@@ -100,14 +99,10 @@ namespace GI
             }
         }
 
-        public async Task LoadImageFromDbAsync() // Загрузка из БД всех файлов коллекции
+        public async Task LoadImageFromDbAsync() // Загрузка из БД всех документов коллекции
         {
-            var client = new MongoClient(_connectionString);
-            var database = client.GetDatabase(_databaseName);
-            var collection = database.GetCollection<BsonDocument>(_collectionName);
-
             var filter = Builders<BsonDocument>.Filter.Empty;
-            var documents = await collection.Find(filter).ToListAsync();
+            var documents = await _collection.Find(filter).ToListAsync();
 
             foreach (var document in documents)
             {
@@ -117,6 +112,15 @@ namespace GI
             }
         }
 
-        // -------------------------------------------------------------------------------------------------------
+        public async Task DeleteImageAsync(string filename) // Удаление из БД документа коллекции
+        {
+            var filter = Builders<BsonDocument>.Filter.Eq("filename", filename);
+            var result = await _collection.DeleteOneAsync(filter);
+
+            if (result.DeletedCount == 0)
+            {
+                throw new FileNotFoundException($"File {filename} not found.");
+            }
+        }
     }
 }

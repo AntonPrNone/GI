@@ -211,7 +211,8 @@
     </Compile>
     <Compile Include="AppLogic.cs" />
     <Compile Include="Character.cs" />
-    <Compile Include="DatabaseManager.cs" />
+    <Compile Include="CharactersManager.cs" />
+    <Compile Include="ImageManager.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
