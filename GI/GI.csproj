@@ -210,8 +210,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppLogic.cs" />
-    <Compile Include="Character.cs" />
+    <Compile Include="CharacterDocument.cs" />
     <Compile Include="CharactersManager.cs" />
+    <Compile Include="ImageDocument.cs" />
     <Compile Include="ImageManager.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>

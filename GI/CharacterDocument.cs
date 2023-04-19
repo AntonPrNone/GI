@@ -9,16 +9,16 @@ using MongoDB.Bson.Serialization.Attributes;
 namespace GI
 {
     [BsonIgnoreExtraElements]
-    public class Character
+    public class CharacterDocument
     {
         [BsonId]
         public ObjectId Id { get; set; }
 
-        [BsonElement("icon")]
-        public string Icon { get; set; }
-
         [BsonElement("name")]
         public string Name { get; set; }
+
+        [BsonElement("category")]
+        public string Category { get; set; }
 
         [BsonElement("rarity")]
         public int Rarity { get; set; }
@@ -34,6 +34,9 @@ namespace GI
 
         [BsonElement("stats")]
         public Stats Stats { get; set; }
+
+        [BsonElement("uploadDate")]
+        public string UploadDate { get; set; }
     }
 
     public class Stats

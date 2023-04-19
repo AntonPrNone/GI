@@ -21,6 +21,8 @@ namespace GI
     /// </summary>
     public partial class MainWindow : Window
     {
+        /*  DateTime.UtcNow.AddHours(3) */
+
         public MainWindow()
         {
             InitializeComponent();

@@ -26,7 +26,7 @@ namespace GI
 
             if (string.IsNullOrEmpty(directoryPath))
             {
-                directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "imgs", "pers");
+                directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GI", "imgs", "pers");
             }
 
             Directory.CreateDirectory(directoryPath);
@@ -37,7 +37,7 @@ namespace GI
             _collection = _database.GetCollection<BsonDocument>(_collectionName);
         }
 
-        public async Task UploadImageAsync(string filename) // Загрузка в БД конкретное изображение
+        public async Task<bool> UploadImageAsync(string filename) // Загрузка в БД конкретное изображение
         {
             filename = Path.ChangeExtension(filename, ".png");
             var file = new FileInfo(Path.Combine(_directoryPath, filename));
@@ -45,47 +45,28 @@ namespace GI
             if (file.Exists)
             {
                 var imageBytes = File.ReadAllBytes(file.FullName);
-                var imageBase64 = Convert.ToBase64String(imageBytes);
-
-                var document = new BsonDocument
-                {
-                    {"filename", file.Name},
-                    {"image", new BsonBinaryData(imageBytes)},
-                    {"imageBase64", imageBase64},
-                    {"uploadDate", DateTime.UtcNow.AddHours(3)}
-                };
-
-                await _collection.InsertOneAsync(document);
+                var imageDocument = new ImageDocument(file.Name, imageBytes);
+                await _collection.InsertOneAsync(imageDocument.ToBsonDocument());
             }
 
-            else
-            {
-                //throw new FileNotFoundException($"File {filename} not found.");
-            }
+            return file.Exists;
         }
 
-        public async Task UploadImageAsync() // Загрузка в БД все изображения из папки
+        public async Task UploadImageAsync() // Загрузка в БД все изображения из папки (Не для пользовательского пользования, поэтому не нужна обработка исключения)
         {
             var directory = new DirectoryInfo(_directoryPath);
 
             foreach (var file in directory.GetFiles())
             {
                 var imageBytes = File.ReadAllBytes(file.FullName);
-                var imageBase64 = Convert.ToBase64String(imageBytes);
 
-                var document = new BsonDocument
-                {
-                    {"filename", file.Name},
-                    {"image", new BsonBinaryData(imageBytes)},
-                    {"imageBase64", imageBase64},
-                    {"uploadDate", DateTime.UtcNow.AddHours(3)}
-                };
+                var document = new ImageDocument(file.Name, imageBytes);
 
-                await _collection.InsertOneAsync(document);
+                await _collection.InsertOneAsync(document.ToBsonDocument());
             }
         }
 
-        public async Task LoadImageFromDbAsync(string filename) // Загрузка из БД конкретный документ
+        public async Task<bool> LoadImageFromDbAsync(string filename) // Загрузка из БД конкретное изображение
         {
             filename = Path.ChangeExtension(filename, ".png");
 
@@ -97,9 +78,11 @@ namespace GI
                 var bytes = document["image"].AsByteArray;
                 await Task.Run(() => File.WriteAllBytes(Path.Combine(_directoryPath, filename), bytes));
             }
+
+            return document != null;
         }
 
-        public async Task LoadImageFromDbAsync() // Загрузка из БД всех документов коллекции
+        public async Task LoadImageFromDbAsync() // Загрузка из БД всех изображений коллекции
         {
             var filter = Builders<BsonDocument>.Filter.Empty;
             var documents = await _collection.Find(filter).ToListAsync();
@@ -112,15 +95,12 @@ namespace GI
             }
         }
 
-        public async Task DeleteImageAsync(string filename) // Удаление из БД документа коллекции
+        public async Task<bool> DeleteImageAsync(string filename) // Удаление из БД изображения коллекции
         {
             var filter = Builders<BsonDocument>.Filter.Eq("filename", filename);
             var result = await _collection.DeleteOneAsync(filter);
 
-            if (result.DeletedCount == 0)
-            {
-                throw new FileNotFoundException($"File {filename} not found.");
-            }
+            return result.DeletedCount != 0;
         }
     }
 }
