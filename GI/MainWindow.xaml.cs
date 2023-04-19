@@ -36,20 +36,19 @@ namespace GI
 
         private async void LoadData()
         {
-            // Показываем прогресс-бар
-            PB.Visibility = Visibility.Visible;
-            PB.IsIndeterminate = true;
+            // Показываем загрузочный круг
+            LoadingCircle.Visibility = Visibility.Visible;
 
-            var db2 = new CharactersManager();
             // Загружаем данные из БД
-            await db2.UploadCharacterAsync(new Character() { Name = "NAME1", Region = "Tatarstan", Stats = new Stats() });
-            await Task.Delay(3000);
+            var db2 = new CharactersManager();
+            //await db2.UploadCharacterAsync(new Character() { Name = "NAME1", Region = "Tatarstan", Stats = new Stats() });
+            await Task.Delay(-1);
 
-            // Скрываем прогресс-бар
-            PB.IsIndeterminate = false;
-            PB.Visibility = Visibility.Collapsed;
+            // Скрываем загрузочный круг
+            LoadingCircle.Visibility = Visibility.Collapsed;
         }
 
+        // --------------------------------- Взаимодействие с окном --------------------------------------------
 
         private void MinimizeButton_Click(object sender, RoutedEventArgs e)
         {
