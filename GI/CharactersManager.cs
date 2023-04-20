@@ -1,8 +1,5 @@
 ﻿using MongoDB.Driver;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace GI
@@ -34,14 +31,12 @@ namespace GI
         public async Task<CharacterDocument> LoadCharacterAsync(string name) // Получение персонажа из БД
         {
             var filter = Builders<CharacterDocument>.Filter.Eq(c => c.Name, name);
-            var character = await _characters.Find(filter).FirstOrDefaultAsync();
-            return character;
+            return await _characters.Find(filter).FirstOrDefaultAsync();
         }
 
         public async Task<List<CharacterDocument>> LoadCharacterAsync() // Получение всех персонажей из БД
         {
-            var characters = await _characters.Find(_ => true).ToListAsync();
-            return characters;
+            return await _characters.Find(_ => true).ToListAsync();
         }
 
         public async Task<bool?> DeleteCharacterAsync(string name) // Удаление персонажа из БД
@@ -49,7 +44,7 @@ namespace GI
             var filter = Builders<CharacterDocument>.Filter.Eq(c => c.Name, name);
             var result = await _characters.DeleteOneAsync(filter);
 
-            return result.DeletedCount != 0;
+            return result.IsAcknowledged && result.DeletedCount > 0;
         }
     }
 }
