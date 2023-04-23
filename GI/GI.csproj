@@ -265,6 +265,9 @@
     <Resource Include="imgs\expand.png" />
     <Resource Include="imgs\minimize.png" />
     <Resource Include="imgs\icowindow.png" />
+    <Resource Include="imgs\GI_BG.jpg" />
+    <Resource Include="imgs\GI_BG-0.15Op.jpg" />
+    <Resource Include="imgs\Камисато Аяка.png" />
     <Content Include="mongocrypt.dll" />
   </ItemGroup>
   <ItemGroup>

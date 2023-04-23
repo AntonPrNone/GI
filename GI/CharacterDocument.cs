@@ -17,8 +17,14 @@ namespace GI
         [BsonElement("name")]
         public string Name { get; set; }
 
+        [BsonElement("photo")]
+        public string Photo { get; set; }
+
         [BsonElement("category")]
         public string Category { get; set; }
+
+        [BsonElement("description")]
+        public string Description { get; set; }
 
         [BsonElement("rarity")]
         public int Rarity { get; set; }
@@ -36,16 +42,16 @@ namespace GI
         public Stats Stats { get; set; }
 
         [BsonElement("uploadDate")]
-        public string UploadDate { get; set; }
+        public DateTime UploadDate { get; set; }
     }
 
     public class Stats
     {
-        [BsonElement("health")]
-        public int Health { get; set; }
-
         [BsonElement("attack")]
         public int Attack { get; set; }
+
+        [BsonElement("health")]
+        public int Health { get; set; }
 
         [BsonElement("defense")]
         public int Defense { get; set; }

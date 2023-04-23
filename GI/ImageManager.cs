@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace GI
 {
     // Коллекция изображений
-    public class ImageUploader
+    public class ImageManager
     {
         private readonly string _connectionString;
         private readonly string _databaseName;
@@ -18,7 +18,7 @@ namespace GI
         private readonly IMongoDatabase _database;
         private readonly IMongoCollection<ImageDocument> _collection;
 
-        public ImageUploader(string databaseName = "DB", string collectionName = "CharactersGI", string directoryPath = "null", string connectionString = "mongodb://localhost:27017")
+        public ImageManager(string databaseName = "DB", string collectionName = "ImageGI", string directoryPath = null, string connectionString = "mongodb://localhost:27017")
         {
             _connectionString = connectionString;
             _databaseName = databaseName;

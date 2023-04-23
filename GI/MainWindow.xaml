@@ -62,11 +62,39 @@
             <Setter Property="Foreground" Value="#CCCCCC"/>
         </Style>
 
+        <Style TargetType="TabItem">
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="Black" />
+            <Setter Property="FontSize" Value="16" />
+            <Setter Property="FontFamily" Value="Segoe UI" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TabItem">
+                        <Border Name="Border" Margin="0,0,-4,0" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="10,10,0,0">
+                            <ContentPresenter x:Name="ContentSite" VerticalAlignment="Center" HorizontalAlignment="Center" ContentSource="Header" Margin="10,2"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsSelected" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="#343434"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#4B4B4D"/>
+                                <Setter Property="Foreground" Value="#FFFFFF"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Background" Value="#343434"/>
+                                <Setter TargetName="Border" Property="BorderBrush" Value="#656565"/>
+                                <Setter Property="Foreground" Value="#656565"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
         <Storyboard x:Key="ClosingAnimation">
             <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.3"/>
         </Storyboard>
-    </Window.Resources>
 
+    </Window.Resources>
 
     <Grid Margin="0" Width="1280" Height="720"  MouseDown="OnMouseLeftButtonDown">
         <Border Width="auto" Height="auto" BorderThickness="3"
@@ -104,11 +132,12 @@
                         </StackPanel>
                     </Grid>
                 </Border>
-
-                <Grid Grid.Row="1" Background="White" Margin="0,0,0,40">
-                    <ProgressBar x:Name="PB" HorizontalAlignment="Left" Height="30" Margin="168,84,0,0" VerticalAlignment="Top" Width="200"/>
-                    <Canvas Width="60" Height="60" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,25,25">
-                        <Ellipse x:Name="LoadingCircle" Width="60" Height="60" Fill="White" StrokeThickness="5" StrokeDashArray="0.5 1.5" StrokeDashCap="Round" StrokeEndLineCap="Square">
+                <Grid Grid.Row="1" Margin="0,0,0,40" Panel.ZIndex="0">
+                    <Grid.Background>
+                        <ImageBrush/>
+                    </Grid.Background>
+                    <Canvas Width="60" Height="60" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,25" Panel.ZIndex="999">
+                        <Ellipse x:Name="LoadingCircle" Width="60" Height="60" Fill="#00000000" StrokeThickness="5" StrokeDashArray="0.5 1.5" StrokeDashCap="Round" StrokeEndLineCap="Square" Visibility="Collapsed" Opacity="0">
                             <Ellipse.Stroke>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                                     <GradientStop Color="Black" Offset="0"/>
@@ -116,7 +145,7 @@
                                 </LinearGradientBrush>
                             </Ellipse.Stroke>
                             <Ellipse.RenderTransform>
-                                <RotateTransform x:Name="rotateTransform" CenterX="30" CenterY="20" Angle="0" />
+                                <RotateTransform x:Name="rotateTransform" CenterX="20" CenterY="20" Angle="0" />
                             </Ellipse.RenderTransform>
                         </Ellipse>
                         <Canvas.Triggers>
@@ -129,7 +158,40 @@
                             </EventTrigger>
                         </Canvas.Triggers>
                     </Canvas>
-
+                    <Label x:Name="Ldg_label" Content="Загрузка..." HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe UI Black" Width="93" FontSize="16" Padding="5,5,0,5" Margin="0,0,5,0" Visibility="Collapsed" Opacity="0" Panel.ZIndex="999" Foreground="White"/>
+                    <TabControl Name="TabControl" TabStripPlacement="Top" Height="634" VerticalAlignment="Top" OpacityMask="Black" BorderBrush="#00ACACAC">
+                        <TabControl.Background>
+                            <ImageBrush ImageSource="/imgs/GI_BG-0.15Op.jpg" TileMode="None" Stretch="UniformToFill"/>
+                        </TabControl.Background>
+                        <TabItem Header="Персонажи">
+                            <!-- Содержимое вкладки -->
+                            <ListBox x:Name="listBox" Background="#7F000000" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderBrush="#00ABADB3" HorizontalAlignment="Center">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Background="{x:Null}" CanHorizontallyScroll="False">
+                                            <Image Source="{Binding Photo}" Width="200"/>
+                                            <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
+                                                <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
+                                                <TextBlock Text="{Binding Category}" Foreground="White" />
+                                                <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{Binding Element}" Foreground="White" />
+                                                <TextBlock Text="{Binding Rarity}" Foreground="White" />
+                                                <TextBlock Text="{Binding Region}" Foreground="White" />
+                                                <TextBlock Text="{Binding Weapon}" Foreground="White" />
+                                                <TextBlock Text="{Binding Stats.Health}" Foreground="White" />
+                                                <TextBlock Text="{Binding Stats.Attack}" Foreground="White" />
+                                                <TextBlock Text="{Binding Stats.Defense}" Foreground="White" />
+                                                <TextBlock Text="{Binding UploadDate}" Foreground="White" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </TabItem>
+                        <TabItem Header="Навыки">
+                            <!-- Содержимое вкладки -->
+                        </TabItem>
+                    </TabControl>
                     <!-- Тут можно добавить свой контент -->
                 </Grid>
                 <Border Grid.Row="1" VerticalAlignment="Bottom" Height="40">

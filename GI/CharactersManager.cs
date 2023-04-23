@@ -8,7 +8,7 @@ namespace GI
     {
         private readonly IMongoCollection<CharacterDocument> _characters;
 
-        public CharactersManager(string databaseName = "DB", string collectionName = "CharactersGI", string connectionString = "mongodb://localhost:27017")
+        public CharactersManager(string databaseName = "DB", string collectionName = "CharacterGI", string connectionString = "mongodb://localhost:27017")
         {
             var client = new MongoClient(connectionString);
             var database = client.GetDatabase(databaseName);
