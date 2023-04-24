@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Remoting.Contexts;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -124,6 +125,25 @@ namespace GI
             {
                 DragMove();
             }
+        }
+
+        private async void AddButton_ClickAsync(object sender, RoutedEventArgs e)
+        {
+            var character = new CharacterDocument() { Stats = new Stats() };
+
+            character.Name = NameTextBox.Text;
+            character.Category = CategoryTextBox.Text;
+            character.Description = Regex.Replace(DescriptionTextBox.Text.Replace("\r", " ").Replace("\n", " ").Trim(), @"\s+", " ");
+            character.Rarity = Convert.ToInt32(RarityTextBox.Text);
+            character.Element = ElementTextBox.Text;
+            character.Weapon = WeaponTextBox.Text;
+            character.Region = RegionTextBox.Text;
+            character.Stats.Attack = Convert.ToInt32(AttackTextBox.Text);
+            character.Stats.Health = Convert.ToInt32(HealthTextBox.Text);
+            character.Stats.Defense = Convert.ToInt32(DefenseTextBox.Text);
+
+            var connect = new CharactersManager();
+            await connect.UploadCharacterAsync(character);
         }
     }
 }

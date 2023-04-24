@@ -190,6 +190,46 @@
                         </TabItem>
                         <TabItem Header="Навыки">
                             <!-- Содержимое вкладки -->
+                            <Grid VerticalAlignment="Center" Margin="10,10,10,10">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <TextBlock Text="Name:" Grid.Row="0" Grid.Column="0" Margin="5"/>
+                                <TextBox Grid.Row="0" Grid.Column="1" Margin="5" Name="NameTextBox"/>
+                                <TextBlock Text="Category:" Grid.Row="1" Grid.Column="0" Margin="5"/>
+                                <TextBox Grid.Row="1" Grid.Column="1" Margin="5" Name="CategoryTextBox"/>
+                                <TextBlock Text="Description:" Grid.Row="2" Grid.Column="0" Margin="5" TextWrapping="Wrap"/>
+                                <TextBox Grid.Row="2" Grid.Column="1" Margin="5" Height="100" Name="DescriptionTextBox" TextWrapping="Wrap" AcceptsReturn="True"/>
+                                <TextBlock Text="Rarity:" Grid.Row="3" Grid.Column="0" Margin="5"/>
+                                <TextBox Grid.Row="3" Grid.Column="1" Margin="5" Name="RarityTextBox"/>
+                                <TextBlock Text="Element:" Grid.Row="4" Grid.Column="0" Margin="5"/>
+                                <TextBox Grid.Row="4" Grid.Column="1" Margin="5" Name="ElementTextBox"/>
+                                <TextBlock Text="Weapon:" Grid.Row="5" Grid.Column="0" Margin="5"/>
+                                <TextBox Grid.Row="5" Grid.Column="1" Margin="5" Name="WeaponTextBox"/>
+                                <TextBlock Text="Region:" Grid.Row="6" Grid.Column="0" Margin="5"/>
+                                <TextBox Grid.Row="6" Grid.Column="1" Margin="5" Name="RegionTextBox"/>
+                                <TextBlock Text="Attack:" Grid.Row="7" Grid.Column="0" Margin="5"/>
+                                <TextBox Grid.Row="7" Grid.Column="1" Margin="5" Name="AttackTextBox"/>
+                                <TextBlock Text="Health:" Grid.Row="8" Grid.Column="0" Margin="5"/>
+                                <TextBox Grid.Row="8" Grid.Column="1" Margin="5" Name="HealthTextBox"/>
+                                <TextBlock Text="Defense:" Grid.Row="9" Grid.Column="0" Margin="5"/>
+                                <TextBox Grid.Row="9" Grid.Column="1" Margin="5" Height="24" Name="DefenseTextBox"/>
+                                <Button Grid.Row="11" Grid.Column="0" Grid.ColumnSpan="2" Content="Add" Click="AddButton_ClickAsync"/>
+                            </Grid>
                         </TabItem>
                     </TabControl>
                     <!-- Тут можно добавить свой контент -->
