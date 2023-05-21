@@ -4,6 +4,7 @@ using System.Windows;
 using System.Threading.Tasks;
 using System.Windows.Input;
 using System.IO;
+using LogicLibrary;
 
 namespace GI
 {
@@ -24,7 +25,7 @@ namespace GI
         {
             try
             {
-                if (await MongoDbClient.GetUserAsync(Login_TextBox.Text) is null)
+                if (await UserManager.GetUserAsync(Login_TextBox.Text) is null)
                     Dispatcher.Invoke(RegInterface);
 
                 else
@@ -43,7 +44,7 @@ namespace GI
         {
             try
             {
-                if (await MongoDbClient.GetUserAsync(Login_TextBox.Text) is null)
+                if (await UserManager.GetUserAsync(Login_TextBox.Text) is null)
                     Dispatcher.Invoke(RegInterface);
 
                 else
@@ -83,7 +84,7 @@ namespace GI
             {
                 try
                 {
-                    if (!LOGReg) await MongoDbClient.AddUserAsync(new User() { Login = Login_TextBox.Text, Password = Password_TextBox.Password });
+                    if (!LOGReg) await UserManager.AddUserAsync(new User() { Login = Login_TextBox.Text, Password = Password_TextBox.Password });
                 }
 
                 // Обрабатываем исключение, если не будет получен ответ от сервера в течении 30 сек
@@ -101,7 +102,7 @@ namespace GI
                 }
 
                 MainWindow mainWindow = new MainWindow();
-                await AnimationHelper.FadeOut2Async(this);
+                await Anim.FadeOut2Async(this);
                 mainWindow.Show(); // Выполняем авторизацию и переходим в настройки
                 this.Close();
             }
@@ -121,7 +122,7 @@ namespace GI
             {
                 try
                 {
-                    user = await MongoDbClient.GetUserAsync(Login_TextBox.Text);
+                    user = await UserManager.GetUserAsync(Login_TextBox.Text);
                 }
 
                 // Обрабатываем исключение, если не будет получен ответ от сервера в течении 30 сек
@@ -146,14 +147,14 @@ namespace GI
             }
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e) // После отрисовки окна
+        private async void Window_Loaded(object sender, RoutedEventArgs e) // После отрисовки окна
         {
-            this.FadeIn();
+            await Anim.FadeInAsync(this, 1);
         }
 
         private async void Image_MouseLeftButtonDownAsync(object sender, MouseButtonEventArgs e) // Закрытие окна по кнопке
         {
-            await AnimationHelper.FadeOut2Async(this);
+            await Anim.FadeOut2Async(this);
             Close();
         }
     }

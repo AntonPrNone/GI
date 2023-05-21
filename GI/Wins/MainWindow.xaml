@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GI"
         mc:Ignorable="d"
-        WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Width="1280" Height="720" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowindow.png" Closed="Window_Closed">
+        WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Width="1280" Height="720" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowindow.png" Closed="Window_Closed" Loaded="Window_Loaded">
 
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">

@@ -203,13 +203,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="AnimationHelper.cs" />
-    <Compile Include="MongoDbClient.cs" />
-    <Compile Include="UserManager.cs" />
+    <Compile Include="Anim.cs" />
     <Compile Include="Wins\RegWin.xaml.cs">
       <DependentUpon>RegWin.xaml</DependentUpon>
     </Compile>
-    <Compile Include="User.cs" />
     <Page Include="Wins\AutoLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -222,14 +219,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="AppLogic.cs" />
     <Compile Include="Wins\AutoLog.xaml.cs">
       <DependentUpon>AutoLog.xaml</DependentUpon>
     </Compile>
-    <Compile Include="CharacterDocument.cs" />
-    <Compile Include="CharactersManager.cs" />
-    <Compile Include="ImageDocument.cs" />
-    <Compile Include="ImageManager.cs" />
     <Compile Include="Wins\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -257,7 +249,6 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="GI_TemporaryKey.pfx" />
     <None Include="libmongocrypt.dylib" />
     <None Include="libmongocrypt.so" />
     <None Include="packages.config" />
@@ -302,6 +293,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="imgs\pers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\LogicLibrary\LogicLibrary.csproj">
+      <Project>{caffb74b-d2a3-4b85-905c-20ec51646372}</Project>
+      <Name>LogicLibrary</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\MongoDB.Libmongocrypt.1.7.0\build\MongoDB.Libmongocrypt.targets" Condition="Exists('..\packages\MongoDB.Libmongocrypt.1.7.0\build\MongoDB.Libmongocrypt.targets')" />

@@ -10,6 +10,7 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
+using LogicLibrary;
 
 namespace GI
 {
@@ -49,7 +50,7 @@ namespace GI
 
 		private async Task UpdateData()
 		{
-			user = await MongoDbClient.GetUserAsync(username);
+			user = await UserManager.GetUserAsync(username);
 			favoriteСharactersList = user.FavoriteСharacters;
 			Username_TextBlock.Text = username;
 			characters = await charactersManager.LoadCharacterAsync();
@@ -82,52 +83,24 @@ namespace GI
 			charactersFav = (List<CharacterDocument>)(listBox.ItemsSource = characters.Where(character => character.FavoriteСharacters == pathFav).ToList());
 
 			listBox.ItemsSource = charactersActual;
-			await FadeInAsync(listBox, 1);
+			await Anim.FadeInAsync(listBox, 1);
 		}
 
 		private async void LoadData()
 		{
 			var fadeInTasks = new Task[]
 			{
-				FadeInAsync(LoadingCircle, 1.5),
-				FadeInAsync(Ldg_TextBlock, 1.5)
+				Anim.FadeInAsync(LoadingCircle, 1.5),
+				Anim.FadeInAsync(Ldg_TextBlock, 1.5)
 			};
 
 			await UpdateData();
 
 			var fadeOutTasks = new Task[]
 			{
-				FadeOutAsync(LoadingCircle, 1),
-				FadeOutAsync(Ldg_TextBlock, 1)
+				Anim.FadeOutAsync(LoadingCircle, 1),
+				Anim.FadeOutAsync(Ldg_TextBlock, 1)
 			};
-		}
-
-		private static async Task FadeInAsync(UIElement element, double duration)
-		{
-			DoubleAnimation fadeIn = new DoubleAnimation()
-			{
-				From = 0,
-				To = 1,
-				Duration = TimeSpan.FromSeconds(duration)
-			};
-			element.Visibility = Visibility.Visible;
-			element.BeginAnimation(UIElement.OpacityProperty, fadeIn);
-
-			await Task.Delay((int)(duration * 1000));
-		}
-
-		private static async Task FadeOutAsync(UIElement element, double duration)
-		{
-			DoubleAnimation fadeOut = new DoubleAnimation()
-			{
-				From = 1,
-				To = 0,
-				Duration = TimeSpan.FromSeconds(duration)
-			};
-			element.BeginAnimation(UIElement.OpacityProperty, fadeOut);
-
-			await Task.Delay((int)(duration * 1000));
-			element.Visibility = Visibility.Collapsed;
 		}
 
 		private async void AddButton_ClickAsync(object sender, RoutedEventArgs e)
@@ -159,29 +132,6 @@ namespace GI
 				listBox.Width = double.NaN;
 			// Обновление отображаемых данных в ListBox
 			listBox.ItemsSource = filteredCharacters;
-		}
-
-		public static async Task FadeOut2Async(UIElement element, double durationSeconds = 0.5)
-		{
-			if (element == null) return;
-
-			var storyboard = new Storyboard();
-			var animation = new DoubleAnimation
-			{
-				From = 1.0,
-				To = 0.0,
-				Duration = TimeSpan.FromSeconds(durationSeconds)
-			};
-			storyboard.Children.Add(animation);
-
-			Storyboard.SetTarget(animation, element);
-			Storyboard.SetTargetProperty(animation, new PropertyPath("Opacity"));
-
-			storyboard.Completed += (s, e) => element.Visibility = Visibility.Collapsed;
-
-			storyboard.Begin();
-
-			await Task.Delay(TimeSpan.FromSeconds(durationSeconds));
 		}
 
 		private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -277,12 +227,11 @@ namespace GI
 
         private async void Image_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            UserManager userManager = new UserManager();
-            await userManager.ReplaceUserAsync(user);
+            await UserManager.ReplaceUserAsync(user);
             File.WriteAllText(path, string.Empty);
             RegWin regWin = new RegWin();
             regWin.Show();
-            await FadeOut2Async(this);
+            await Anim.FadeOut2Async(this);
             Close();
         }
 
@@ -308,8 +257,12 @@ namespace GI
 
         private async void Window_Closed(object sender, EventArgs e)
 		{
-			UserManager userManager = new UserManager();
-			await userManager.ReplaceUserAsync(user);
+			await UserManager.ReplaceUserAsync(user);
 		}
-	}
+
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+            await Anim.FadeInAsync(this, 1);
+        }
+    }
 }

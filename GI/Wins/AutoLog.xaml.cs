@@ -1,7 +1,7 @@
-﻿using MongoDB.Driver;
-using System;
+﻿using System;
 using System.IO;
 using System.Windows;
+using LogicLibrary;
 
 namespace GI
 {
@@ -40,7 +40,7 @@ namespace GI
         {
             try
             {
-                User user = await MongoDbClient.GetUserAsync(login);
+                User user = await UserManager.GetUserAsync(login);
 
                 // Если пользователь существует и пароль совпадает, открываем окно настроек
                 if (user != null && password == user.Password)
