@@ -205,19 +205,16 @@
     </ApplicationDefinition>
     <Compile Include="AnimationHelper.cs" />
     <Compile Include="MongoDbClient.cs" />
-    <Compile Include="RegWin.xaml.cs">
+    <Compile Include="UserManager.cs" />
+    <Compile Include="Wins\RegWin.xaml.cs">
       <DependentUpon>RegWin.xaml</DependentUpon>
     </Compile>
     <Compile Include="User.cs" />
-    <Page Include="AutoLog.xaml">
+    <Page Include="Wins\AutoLog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="HomePage.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="MainWindow.xaml">
+    <Page Include="Wins\MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -226,21 +223,18 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AppLogic.cs" />
-    <Compile Include="AutoLog.xaml.cs">
+    <Compile Include="Wins\AutoLog.xaml.cs">
       <DependentUpon>AutoLog.xaml</DependentUpon>
     </Compile>
     <Compile Include="CharacterDocument.cs" />
     <Compile Include="CharactersManager.cs" />
-    <Compile Include="HomePage.xaml.cs">
-      <DependentUpon>HomePage.xaml</DependentUpon>
-    </Compile>
     <Compile Include="ImageDocument.cs" />
     <Compile Include="ImageManager.cs" />
-    <Compile Include="MainWindow.xaml.cs">
+    <Compile Include="Wins\MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="RegWin.xaml">
+    <Page Include="Wins\RegWin.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -280,13 +274,18 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="imgs\expand2.png" />
-    <Resource Include="imgs\close.png" />
     <Resource Include="imgs\expand.png" />
     <Resource Include="imgs\minimize.png" />
     <Resource Include="imgs\icowindow.png" />
     <Resource Include="imgs\GI_BG.jpg" />
     <Resource Include="imgs\GI_BG-0.15Op.jpg" />
     <Resource Include="imgs\Камисато Аяка.png" />
+    <Resource Include="imgs\user.png" />
+    <Resource Include="imgs\close.png" />
+    <Resource Include="imgs\exitColor.png" />
+    <Resource Include="imgs\favorite.png" />
+    <Resource Include="imgs\favoriteEmpty.png" />
+    <Resource Include="imgs\Search.png" />
     <Content Include="mongocrypt.dll" />
   </ItemGroup>
   <ItemGroup>

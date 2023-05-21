@@ -26,7 +26,7 @@ namespace GI
 
             if (string.IsNullOrEmpty(directoryPath))
             {
-                directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GI", "imgs", "pers");
+                directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GI", "imgs", "pers2");
             }
 
             Directory.CreateDirectory(directoryPath);

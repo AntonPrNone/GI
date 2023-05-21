@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GI"
         mc:Ignorable="d"
-        WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Width="1280" Height="720" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowindow.png">
+        WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Width="1280" Height="720" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowindow.png" Closed="Window_Closed">
 
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
@@ -19,9 +19,9 @@
 
     <Window.Resources>
         <!-- Ресурсы для изображений -->
-        <BitmapImage x:Key="MinimizeIcon" UriSource="imgs/minimize.png" />
-        <BitmapImage x:Key="MaximizeIcon" UriSource="imgs/expand.png" />
-        <BitmapImage x:Key="CloseIcon" UriSource="imgs/close.png" />
+        <BitmapImage x:Key="MinimizeIcon" UriSource="/imgs/minimize.png" />
+        <BitmapImage x:Key="MaximizeIcon" UriSource="/imgs/expand.png" />
+        <BitmapImage x:Key="CloseIcon" UriSource="/imgs/close.png" />
 
         <!-- Стили для кнопок -->
         <Style TargetType="Button" x:Key="WindowButton">
@@ -114,10 +114,11 @@
                 <Border>
                     <Grid Grid.Row="0" VerticalAlignment="Center" Height="40">
                         <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="410"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0" Margin="0,0,10,0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2">
                             <Image Source="/imgs/icowindow.png" />
                             <TextBlock Style="{StaticResource WindowTitle}" Margin="0,0,0,0">
                                 <Run Text="Genshin Impact " Foreground="#FFB44CFF" FontWeight="Bold" FontSize="20"/>
@@ -125,18 +126,26 @@
                                 <Run Text=" Encyclopedia of Characters"/>
                             </TextBlock>
                         </StackPanel>
-
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Grid.Column="1" Margin="0,0,10,0">
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <Image Source="/imgs/Search.png" Width="30" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,0" Height="30"/>
+                            <TextBox x:Name="Search_TextBox" Grid.Column="0" VerticalContentAlignment="Center" Height="25" VerticalAlignment="Center" Margin="5,10,0,0" HorizontalAlignment="Left" MinWidth="192" TextChanged="TextBox_TextChanged" Padding="5,0,0,0"/>
+                        </StackPanel>
+                        
+                        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right" Margin="0,0,10,0">
+                            <Image Source="/imgs/user.png" Margin="0,5,5,0"/>
+                            <TextBlock x:Name="Username_TextBlock" Margin="0,5,10,0" Text="Антон" Foreground="White" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18"/>
+                            <Image Source="/imgs/exitColor.png" Margin="0,5,10,0" Width="30" Height="30" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown"/>
                             <Button x:Name="MinimizeButton" Style="{StaticResource WindowButton}" Tag="{StaticResource MinimizeIcon}" Click="MinimizeButton_Click" Margin="5,5,0,5"/>
                             <Button x:Name="CloseButton" Style="{StaticResource WindowButton}" Tag="{StaticResource CloseIcon}" Click="CloseButton_Click" />
                         </StackPanel>
                     </Grid>
                 </Border>
+
                 <Grid Grid.Row="1" Margin="0,0,0,40" Panel.ZIndex="0">
                     <Grid.Background>
                         <ImageBrush/>
                     </Grid.Background>
-                    <Canvas Width="60" Height="60" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,25" Panel.ZIndex="999">
+                    <Canvas Width="60" Height="60" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="0,0,15,35" Panel.ZIndex="999">
                         <Ellipse x:Name="LoadingCircle" Width="60" Height="60" Fill="#00000000" StrokeThickness="5" StrokeDashArray="0.5 1.5" StrokeDashCap="Round" StrokeEndLineCap="Square" Visibility="Collapsed" Opacity="0">
                             <Ellipse.Stroke>
                                 <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
@@ -158,20 +167,23 @@
                             </EventTrigger>
                         </Canvas.Triggers>
                     </Canvas>
-                    <Label x:Name="Ldg_label" Content="Загрузка..." HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe UI Black" Width="93" FontSize="16" Padding="5,5,0,5" Margin="0,0,5,0" Visibility="Collapsed" Opacity="0" Panel.ZIndex="999" Foreground="White"/>
-                    <TabControl Name="TabControl" TabStripPlacement="Top" Height="634" VerticalAlignment="Top" OpacityMask="Black" BorderBrush="#00ACACAC">
+                    <TextBlock x:Name="Ldg_TextBlock" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontFamily="Segoe UI Black" Width="93" FontSize="16" Padding="5,5,0,5" Margin="0,0,5,0" Panel.ZIndex="999" Foreground="White" Text="Загрузка данных..." TextWrapping="Wrap" TextAlignment="Center" Visibility="Collapsed" Opacity="0"/>
+                    <TabControl Name="TabControl" TabStripPlacement="Top" Height="634" VerticalAlignment="Top" OpacityMask="Black" BorderBrush="#00ACACAC" SelectionChanged="TabControl_SelectionChanged">
                         <TabControl.Background>
                             <ImageBrush ImageSource="/imgs/GI_BG-0.15Op.jpg" TileMode="None" Stretch="UniformToFill"/>
                         </TabControl.Background>
                         <TabItem Header="Персонажи">
                             <!-- Содержимое вкладки -->
-                            <ListBox x:Name="listBox" Background="#7F000000" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderBrush="#00ABADB3" HorizontalAlignment="Center">
+                            <ListBox x:Name="listBox1" Background="#7F000000" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderBrush="#00ABADB3" HorizontalAlignment="Center">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" Background="{x:Null}" CanHorizontallyScroll="False">
                                             <Image Source="{Binding Photo}" Width="200"/>
                                             <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
-                                                <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
+                                                    <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown_1"/>
+                                                </StackPanel>
                                                 <TextBlock Text="{Binding Category}" Foreground="White" />
                                                 <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
                                                 <TextBlock Text="{Binding Element}" Foreground="White" />
@@ -181,12 +193,68 @@
                                                 <TextBlock Text="{Binding Stats.Health}" Foreground="White" />
                                                 <TextBlock Text="{Binding Stats.Attack}" Foreground="White" />
                                                 <TextBlock Text="{Binding Stats.Defense}" Foreground="White" />
-                                                <TextBlock Text="{Binding UploadDate}" Foreground="White" />
+                                                <TextBlock Text="{Binding UploadDateString}" Foreground="White" />
                                             </StackPanel>
                                         </StackPanel>
                                     </DataTemplate>
                                 </ListBox.ItemTemplate>
                             </ListBox>
+                        </TabItem>
+                        <TabItem Header="Неиграбельные">
+                            <ListBox x:Name="listBox2" Background="#7F000000" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderBrush="#00ABADB3" HorizontalAlignment="Center">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Background="{x:Null}" CanHorizontallyScroll="False">
+                                            <Image Source="{Binding Photo}" Width="200"/>
+                                            <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
+                                                    <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown_1"/>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Category}" Foreground="White" />
+                                                <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{Binding Element}" Foreground="White" />
+                                                <TextBlock Text="{Binding Rarity}" Foreground="White" />
+                                                <TextBlock Text="{Binding Region}" Foreground="White" />
+                                                <TextBlock Text="{Binding Weapon}" Foreground="White" />
+                                                <TextBlock Text="{Binding Stats.Health}" Foreground="White" />
+                                                <TextBlock Text="{Binding Stats.Attack}" Foreground="White" />
+                                                <TextBlock Text="{Binding Stats.Defense}" Foreground="White" />
+                                                <TextBlock Text="{Binding UploadDateString}" Foreground="White" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </TabItem>
+
+                        <TabItem Header="Избранное">
+                            <ListBox x:Name="listBox3" Background="#7F000000" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderBrush="#00ABADB3" HorizontalAlignment="Center">
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <StackPanel Orientation="Horizontal" Background="{x:Null}" CanHorizontallyScroll="False">
+                                            <Image Source="{Binding Photo}" Width="200"/>
+                                            <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
+                                                    <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown_1"/>
+                                                </StackPanel>
+                                                <TextBlock Text="{Binding Category}" Foreground="White" />
+                                                <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
+                                                <TextBlock Text="{Binding Element}" Foreground="White" />
+                                                <TextBlock Text="{Binding Rarity}" Foreground="White" />
+                                                <TextBlock Text="{Binding Region}" Foreground="White" />
+                                                <TextBlock Text="{Binding Weapon}" Foreground="White" />
+                                                <TextBlock Text="{Binding Stats.Health}" Foreground="White" />
+                                                <TextBlock Text="{Binding Stats.Attack}" Foreground="White" />
+                                                <TextBlock Text="{Binding Stats.Defense}" Foreground="White" />
+                                                <TextBlock Text="{Binding UploadDateString}" Foreground="White" />
+                                            </StackPanel>
+                                        </StackPanel>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+
                         </TabItem>
                         <TabItem Header="Навыки">
                             <!-- Содержимое вкладки -->

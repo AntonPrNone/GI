@@ -43,6 +43,12 @@ namespace GI
 
         [BsonElement("uploadDate")]
         public DateTime UploadDate { get; set; }
+
+        [BsonIgnore]
+        public string UploadDateString => UploadDate.ToString("dd.MM.yy HH:mm");
+
+        [BsonElement("favoriteСharacters")]
+        public string FavoriteСharacters { get; set; }
     }
 
     public class Stats
