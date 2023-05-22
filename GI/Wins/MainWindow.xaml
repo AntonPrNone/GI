@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:GI"
         mc:Ignorable="d"
-        WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Width="1280" Height="720" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowindow.png" Closed="Window_Closed" Loaded="Window_Loaded">
+        WindowStyle="None" ResizeMode="NoResize" AllowsTransparency="True" Width="1280" Height="720" WindowStartupLocation="CenterScreen" Background="Transparent" RenderTransformOrigin="0.5,0.5" Icon="/imgs/icowindow.png" Closed="Window_Closed" Loaded="Window_Loaded" Title="Genshin Impact | Encyclopedia of Characters">
 
     <Window.Triggers>
         <EventTrigger RoutedEvent="Window.Loaded">
@@ -17,7 +17,7 @@
         </EventTrigger>
     </Window.Triggers>
 
-    <Window.Resources>
+    <Window.Resources>  
         <!-- Ресурсы для изображений -->
         <BitmapImage x:Key="MinimizeIcon" UriSource="/imgs/minimize.png" />
         <BitmapImage x:Key="MaximizeIcon" UriSource="/imgs/expand.png" />
@@ -93,10 +93,60 @@
         <Storyboard x:Key="ClosingAnimation">
             <DoubleAnimation Storyboard.TargetProperty="Opacity" To="0" Duration="0:0:0.3"/>
         </Storyboard>
+        <SolidColorBrush x:Key="TextBox.Static.Border" Color="#FFABAdB3"/>
+        <SolidColorBrush x:Key="TextBox.MouseOver.Border" Color="#FF7EB4EA"/>
+        <SolidColorBrush x:Key="TextBox.Focus.Border" Color="#FF569DE5"/>
+        <Style x:Key="TextBoxStyleCornerRadius" TargetType="{x:Type TextBox}">
+            <Setter Property="Background" Value="{DynamicResource {x:Static SystemColors.WindowBrushKey}}"/>
+            <Setter Property="BorderBrush" Value="{StaticResource TextBox.Static.Border}"/>
+            <Setter Property="Foreground" Value="{DynamicResource {x:Static SystemColors.ControlTextBrushKey}}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="KeyboardNavigation.TabNavigation" Value="None"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="AllowDrop" Value="true"/>
+            <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
+            <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type TextBox}">
+                        <Border x:Name="border" SnapsToDevicePixels="True" CornerRadius="10,10,10,10" BorderThickness="2,2,2,2">
+                            <Border.BorderBrush>
+                                <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                    <GradientStop Color="Black"/>
+                                    <GradientStop Color="#FFB44CFF" Offset="1"/>
+                                </LinearGradientBrush>
+                            </Border.BorderBrush>
+                            <ScrollViewer x:Name="PART_ContentHost" Focusable="false" HorizontalScrollBarVisibility="Hidden" VerticalScrollBarVisibility="Hidden" Foreground="White"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsEnabled" Value="false">
+                                <Setter Property="Opacity" TargetName="border" Value="0.56"/>
+                            </Trigger>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.MouseOver.Border}"/>
+                            </Trigger>
+                            <Trigger Property="IsKeyboardFocused" Value="true">
+                                <Setter Property="BorderBrush" TargetName="border" Value="{StaticResource TextBox.Focus.Border}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <MultiTrigger>
+                    <MultiTrigger.Conditions>
+                        <Condition Property="IsInactiveSelectionHighlightEnabled" Value="true"/>
+                        <Condition Property="IsSelectionActive" Value="false"/>
+                    </MultiTrigger.Conditions>
+                    <Setter Property="SelectionBrush" Value="{DynamicResource {x:Static SystemColors.InactiveSelectionHighlightBrushKey}}"/>
+                </MultiTrigger>
+            </Style.Triggers>
+        </Style>
 
     </Window.Resources>
 
-    <Grid Margin="0" Width="1280" Height="720"  MouseDown="OnMouseLeftButtonDown">
+    <Grid Margin="0" Width="1280" Height="720" MouseDown="OnMouseLeftButtonDown">
         <Border Width="auto" Height="auto" BorderThickness="3"
                 CornerRadius="5,40,5,40" Background="#FF2B2B2B">
             <Border.BorderBrush>
@@ -117,6 +167,7 @@
                             <ColumnDefinition Width="410"/>
                             <ColumnDefinition Width="*"/>
                             <ColumnDefinition Width="Auto"/>
+                            <ColumnDefinition Width="Auto"/>
                         </Grid.ColumnDefinitions>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Grid.Column="0" Grid.ColumnSpan="2">
                             <Image Source="/imgs/icowindow.png" />
@@ -128,10 +179,21 @@
                         </StackPanel>
                         <StackPanel Grid.Column="1" Orientation="Horizontal">
                             <Image Source="/imgs/Search.png" Width="30" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="10,10,0,0" Height="30"/>
-                            <TextBox x:Name="Search_TextBox" Grid.Column="0" VerticalContentAlignment="Center" Height="25" VerticalAlignment="Center" Margin="5,10,0,0" HorizontalAlignment="Left" MinWidth="192" TextChanged="TextBox_TextChanged" Padding="5,0,0,0"/>
+                            <TextBox  Style="{DynamicResource TextBoxStyleCornerRadius}" x:Name="Search_TextBox" Grid.Column="0" VerticalContentAlignment="Center" Height="25" VerticalAlignment="Center" Margin="5,10,0,0" HorizontalAlignment="Left" MinWidth="192" TextChanged="TextBox_TextChanged" Padding="10,0,0,0" Foreground="White" CaretBrush="#FFB44CFF"/>
                         </StackPanel>
-                        
-                        <StackPanel Orientation="Horizontal" Grid.Column="2" HorizontalAlignment="Right" Margin="0,0,10,0">
+
+                        <ComboBox x:Name="Sort_ComboBox" SelectedIndex="0" SelectionChanged="ComboBox_SelectionChanged" Grid.Column="2" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="0,10,10,0" Foreground="#FFB44CFF" FontWeight="Bold" FontSize="16">
+                            <ComboBoxItem Content="По имени ↑" />
+                            <ComboBoxItem Content="По имени ↓" />
+                            <ComboBoxItem Content="По редкости ↑" />
+                            <ComboBoxItem Content="По редкости ↓" />
+                            <ComboBoxItem Content="По элементу" />
+                            <ComboBoxItem Content="По региону" />
+                            <ComboBoxItem Content="По оружию" />
+                        </ComboBox>
+
+
+                        <StackPanel Orientation="Horizontal" Grid.Column="3" HorizontalAlignment="Right" Margin="0,0,10,0">
                             <Image Source="/imgs/user.png" Margin="0,5,5,0"/>
                             <TextBlock x:Name="Username_TextBlock" Margin="0,5,10,0" Text="Антон" Foreground="White" FontWeight="Bold" TextAlignment="Center" VerticalAlignment="Center" HorizontalAlignment="Center" FontSize="18"/>
                             <Image Source="/imgs/exitColor.png" Margin="0,5,10,0" Width="30" Height="30" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown"/>
@@ -172,28 +234,114 @@
                         <TabControl.Background>
                             <ImageBrush ImageSource="/imgs/GI_BG-0.15Op.jpg" TileMode="None" Stretch="UniformToFill"/>
                         </TabControl.Background>
-                        <TabItem Header="Персонажи">
+                        <TabItem x:Name="TabItem1" Header="Персонажи">
                             <!-- Содержимое вкладки -->
                             <ListBox x:Name="listBox1" Background="#7F000000" ScrollViewer.CanContentScroll="False" ScrollViewer.VerticalScrollBarVisibility="Hidden" BorderBrush="#00ABADB3" HorizontalAlignment="Center">
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" Background="{x:Null}" CanHorizontallyScroll="False">
-                                            <Image Source="{Binding Photo}" Width="200"/>
+                                            <Image Source="{Binding Photo}" Width="200" Margin="0,0,10,0"/>
                                             <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
                                                     <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown_1"/>
                                                 </StackPanel>
                                                 <TextBlock Text="{Binding Category}" Foreground="White" />
-                                                <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
-                                                <TextBlock Text="{Binding Element}" Foreground="White" />
-                                                <TextBlock Text="{Binding Rarity}" Foreground="White" />
-                                                <TextBlock Text="{Binding Region}" Foreground="White" />
-                                                <TextBlock Text="{Binding Weapon}" Foreground="White" />
-                                                <TextBlock Text="{Binding Stats.Health}" Foreground="White" />
-                                                <TextBlock Text="{Binding Stats.Attack}" Foreground="White" />
-                                                <TextBlock Text="{Binding Stats.Defense}" Foreground="White" />
-                                                <TextBlock Text="{Binding UploadDateString}" Foreground="White" />
+                                                <Border BorderThickness="1,1,1,1" CornerRadius="10,10,10,10" Margin="0,10,0,5" Padding="10,10,10,10" Background="#7F000000">
+                                                    <Border.BorderBrush>
+                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                            <GradientStop Color="#FF0179FF" Offset="1"/>
+                                                            <GradientStop Color="#FFB44CFF" Offset="0"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.BorderBrush>
+                                                    <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
+                                                </Border>
+                                                <Grid Margin="0,10,0,0">
+                                                    <!-- Первая таблица -->
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Padding="5,5,5,5" CornerRadius="10,0,0,0">
+                                                            <TextBlock Text="Элемент" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="Редкость" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="2" Padding="5,5,5,5">
+                                                            <TextBlock Text="Регион" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="3" Padding="5,5,5,5" CornerRadius="0,0,0,10">
+                                                            <TextBlock Text="Оружие" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+
+                                                        <Border BorderBrush="#FFB44CFF" Grid.Column="1" BorderThickness="1" Padding="5,5,5,5" CornerRadius="0,10,0,0">
+                                                            <TextBlock Text="{Binding Element}" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe Print"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="{Binding Rarity}"  HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24">
+                                                                <TextBlock.Foreground>
+                                                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                                        <GradientStop Color="#FFF1FF00"/>
+                                                                        <GradientStop Color="#FFFFC700" Offset="1"/>
+                                                                    </LinearGradientBrush>
+                                                                </TextBlock.Foreground>
+                                                            </TextBlock>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="2" Padding="5,5,5,5" MaxWidth="120">
+                                                            <TextBlock Text="{Binding Region}" Foreground="#FFFF6900"  HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="3" Padding="5,5,5,5" CornerRadius="0,0,10,0">
+                                                            <TextBlock Text="{Binding Weapon}"  HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF00CFD4"/>
+                                                        </Border>
+                                                    </Grid>
+
+                                                    <!-- Вторая таблица -->
+                                                    <Grid Grid.Column="1" Margin="300,20,0,0">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Padding="5,5,5,5" CornerRadius="10,0,0,0">
+                                                            <TextBlock Text="Здоровье (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="Атака (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Padding="5,5,5,5" Grid.Row="2" CornerRadius="0,0,0,10">
+                                                            <TextBlock Text="Защита (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="0" Padding="5,5,5,5" CornerRadius="0,10,0,0">
+                                                            <TextBlock Text="{Binding Stats.Health}" Foreground="Lime"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="{Binding Stats.Attack}" Foreground="Red"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="2" Padding="5,5,5,5" CornerRadius="0,0,10,0">
+                                                            <TextBlock Text="{Binding Stats.Defense}" Foreground="#FF5050FF"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
+                                                        </Border>
+                                                    </Grid>
+                                                </Grid>
                                             </StackPanel>
                                         </StackPanel>
                                     </DataTemplate>
@@ -205,22 +353,22 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" Background="{x:Null}" CanHorizontallyScroll="False">
-                                            <Image Source="{Binding Photo}" Width="200"/>
+                                            <Image Source="{Binding Photo}" Width="200" Margin="0,0,10,0" Cursor=""/>
                                             <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
                                                     <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown_1"/>
                                                 </StackPanel>
                                                 <TextBlock Text="{Binding Category}" Foreground="White" />
-                                                <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
-                                                <TextBlock Text="{Binding Element}" Foreground="White" />
-                                                <TextBlock Text="{Binding Rarity}" Foreground="White" />
-                                                <TextBlock Text="{Binding Region}" Foreground="White" />
-                                                <TextBlock Text="{Binding Weapon}" Foreground="White" />
-                                                <TextBlock Text="{Binding Stats.Health}" Foreground="White" />
-                                                <TextBlock Text="{Binding Stats.Attack}" Foreground="White" />
-                                                <TextBlock Text="{Binding Stats.Defense}" Foreground="White" />
-                                                <TextBlock Text="{Binding UploadDateString}" Foreground="White" />
+                                                <Border BorderThickness="1,1,1,1" CornerRadius="10,10,10,10" Margin="0,10,0,5" Padding="10,10,10,10" Background="#7F000000">
+                                                    <Border.BorderBrush>
+                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                            <GradientStop Color="#FF0179FF" Offset="1"/>
+                                                            <GradientStop Color="#FFB44CFF" Offset="0"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.BorderBrush>
+                                                    <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
+                                                </Border>
                                             </StackPanel>
                                         </StackPanel>
                                     </DataTemplate>
@@ -233,22 +381,108 @@
                                 <ListBox.ItemTemplate>
                                     <DataTemplate>
                                         <StackPanel Orientation="Horizontal" Background="{x:Null}" CanHorizontallyScroll="False">
-                                            <Image Source="{Binding Photo}" Width="200"/>
+                                            <Image Source="{Binding Photo}" Width="200" Margin="0,0,10,0"/>
                                             <StackPanel MaxWidth="1000" HorizontalAlignment="Stretch">
                                                 <StackPanel Orientation="Horizontal">
                                                     <TextBlock Text="{Binding Name}" FontWeight="Bold" Foreground="White" FontSize="20" FontFamily="Segoe UI Black"/>
                                                     <Image Source="{Binding FavoriteСharacters}" Width="20" Height="20" Margin="5,0,0,0" Cursor="Hand" MouseLeftButtonDown="Image_MouseLeftButtonDown_1"/>
                                                 </StackPanel>
                                                 <TextBlock Text="{Binding Category}" Foreground="White" />
-                                                <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
-                                                <TextBlock Text="{Binding Element}" Foreground="White" />
-                                                <TextBlock Text="{Binding Rarity}" Foreground="White" />
-                                                <TextBlock Text="{Binding Region}" Foreground="White" />
-                                                <TextBlock Text="{Binding Weapon}" Foreground="White" />
-                                                <TextBlock Text="{Binding Stats.Health}" Foreground="White" />
-                                                <TextBlock Text="{Binding Stats.Attack}" Foreground="White" />
-                                                <TextBlock Text="{Binding Stats.Defense}" Foreground="White" />
-                                                <TextBlock Text="{Binding UploadDateString}" Foreground="White" />
+                                                <Border BorderThickness="1,1,1,1" CornerRadius="10,10,10,10" Margin="0,10,0,5" Padding="10,10,10,10" Background="#7F000000">
+                                                    <Border.BorderBrush>
+                                                        <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                            <GradientStop Color="#FF0179FF" Offset="1"/>
+                                                            <GradientStop Color="#FFB44CFF" Offset="0"/>
+                                                        </LinearGradientBrush>
+                                                    </Border.BorderBrush>
+                                                    <TextBlock Text="{Binding Description}" Foreground="White" TextWrapping="Wrap"/>
+                                                </Border>
+                                                <Grid Margin="0,10,0,0">
+                                                    <!-- Первая таблица -->
+                                                    <Grid>
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Padding="5,5,5,5" CornerRadius="10,0,0,0">
+                                                            <TextBlock Text="Элемент" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="Редкость" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="2" Padding="5,5,5,5">
+                                                            <TextBlock Text="Регион" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Row="3" Padding="5,5,5,5" CornerRadius="0,0,0,10">
+                                                            <TextBlock Text="Оружие" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                        </Border>
+
+                                                        <Border BorderBrush="#FFB44CFF" Grid.Column="1" BorderThickness="1" Padding="5,5,5,5" CornerRadius="0,10,0,0">
+                                                            <TextBlock Text="{Binding Element}" Foreground="White"  HorizontalAlignment="Center" VerticalAlignment="Center" FontFamily="Segoe Print"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="{Binding Rarity}"  HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24">
+                                                                <TextBlock.Foreground>
+                                                                    <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                                                                        <GradientStop Color="#FFF1FF00"/>
+                                                                        <GradientStop Color="#FFFFC700" Offset="1"/>
+                                                                    </LinearGradientBrush>
+                                                                </TextBlock.Foreground>
+                                                            </TextBlock>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="2" Padding="5,5,5,5" MaxWidth="120">
+                                                            <TextBlock Text="{Binding Region}" Foreground="#FFFF6900"  HorizontalAlignment="Center" VerticalAlignment="Center" TextWrapping="Wrap" TextAlignment="Center"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FFB44CFF" BorderThickness="1" Grid.Column="1" Grid.Row="3" Padding="5,5,5,5" CornerRadius="0,0,10,0">
+                                                            <TextBlock Text="{Binding Weapon}"  HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="#FF00CFD4"/>
+                                                        </Border>
+                                                    </Grid>
+
+                                                    <!-- Вторая таблица -->
+                                                    <Grid Grid.Column="1" Margin="300,20,0,0">
+                                                        <Grid.RowDefinitions>
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                            <RowDefinition Height="Auto" />
+                                                        </Grid.RowDefinitions>
+
+                                                        <Grid.ColumnDefinitions>
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                            <ColumnDefinition Width="Auto" />
+                                                        </Grid.ColumnDefinitions>
+
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Padding="5,5,5,5" CornerRadius="10,0,0,0">
+                                                            <TextBlock Text="Здоровье (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="Атака (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Padding="5,5,5,5" Grid.Row="2" CornerRadius="0,0,0,10">
+                                                            <TextBlock Text="Защита (90Lvl)" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                                                        </Border>
+
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="0" Padding="5,5,5,5" CornerRadius="0,10,0,0">
+                                                            <TextBlock Text="{Binding Stats.Health}" Foreground="Lime"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="1" Padding="5,5,5,5">
+                                                            <TextBlock Text="{Binding Stats.Attack}" Foreground="Red"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
+                                                        </Border>
+                                                        <Border BorderBrush="#FF0179FF" BorderThickness="1" Grid.Column="1" Grid.Row="2" Padding="5,5,5,5" CornerRadius="0,0,10,0">
+                                                            <TextBlock Text="{Binding Stats.Defense}" Foreground="#FF5050FF"  HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Normal" FontSize="20"/>
+                                                        </Border>
+                                                    </Grid>
+                                                </Grid>
                                             </StackPanel>
                                         </StackPanel>
                                     </DataTemplate>
@@ -256,7 +490,7 @@
                             </ListBox>
 
                         </TabItem>
-                        <TabItem Header="Навыки">
+                        <TabItem Header="Добавление" Visibility="Collapsed">
                             <!-- Содержимое вкладки -->
                             <Grid VerticalAlignment="Center" Margin="10,10,10,10">
                                 <Grid.RowDefinitions>
@@ -304,9 +538,9 @@
                 </Grid>
                 <Border Grid.Row="1" VerticalAlignment="Bottom" Height="40">
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <TextBlock Text="Copyright © 2023 Company Name" Foreground="White"/>
+                        <TextBlock Text="Copyright © 2023 AntonPr" Foreground="White"/>
                         <TextBlock Text=" | " Foreground="White"/>
-                        <TextBlock Text="Version 1.0.0.0" Foreground="White"/>
+                        <TextBlock Text="Version 1.0.2" Foreground="White"/>
                     </StackPanel>
                 </Border>
             </Grid>

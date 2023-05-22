@@ -1,6 +1,7 @@
 ﻿using MongoDB.Driver;
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace LogicLibrary
@@ -25,7 +26,7 @@ namespace LogicLibrary
 
             if (string.IsNullOrEmpty(directoryPath))
             {
-                directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GI", "imgs", "pers2");
+                directoryPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "GI", "imgs", "pers");
             }
 
             Directory.CreateDirectory(directoryPath);
@@ -81,25 +82,30 @@ namespace LogicLibrary
             return document != null;
         }
 
-        public async Task LoadImageFromDbAsync() // Загрузка из БД всех изображений коллекции
+        public async Task LoadImageFromDbAsync() // Загрузка из БД всех изображений 
         {
             var filter = Builders<ImageDocument>.Filter.Empty;
             var documents = await _collection.Find(filter).ToListAsync();
 
-            foreach (var document in documents)
-            {
-                var filename = document.Filename;
-                var path = Path.Combine(_directoryPath, filename);
-                var pathEx = Path.Combine(_directoryPath, Path.ChangeExtension(filename, ".png"));
+            var tasks = documents.Select(document => ProcessImageDocumentAsync(document)).ToList();
 
-                // Проверяем, существует ли файл в папке
-                if (!File.Exists(pathEx))
-                {
-                    var bytes = document.ImageBytes;
-                    await Task.Run(() => File.WriteAllBytes(path, bytes));
-                }
+            await Task.WhenAll(tasks);
+        }
+
+        private async Task ProcessImageDocumentAsync(ImageDocument document) // Загрузка из БД отдельного изображения через метод загрузки всех
+        {
+            var filename = document.Filename;
+            var path = Path.Combine(_directoryPath, filename);
+            var pathEx = Path.Combine(_directoryPath, Path.ChangeExtension(filename, ".png"));
+
+            // Проверяем, существует ли файл в папке
+            if (!File.Exists(pathEx))
+            {
+                var bytes = document.ImageBytes;
+                await Task.Run(() => File.WriteAllBytes(path, bytes));
             }
         }
+
 
         public async Task<bool> DeleteImageAsync(string filename) // Удаление из БД изображения коллекции
         {
